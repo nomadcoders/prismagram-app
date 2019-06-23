@@ -1,17 +1,26 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { TouchableWithoutFeedback, Keyboard } from "react-native";
+import { Alert } from "react-native";
+import { useMutation } from "react-apollo-hooks";
+import { Facebook } from "expo";
 import AuthButton from "../../components/AuthButton";
 import AuthInput from "../../components/AuthInput";
 import useInput from "../../hooks/useInput";
-import { Alert } from "react-native";
-import { useMutation } from "react-apollo-hooks";
 import { LOG_IN, CREATE_ACCOUNT } from "./AuthQueries";
 
 const View = styled.View`
   justify-content: center;
   align-items: center;
   flex: 1;
+`;
+
+const FBContainer = styled.View`
+  margin-top: 25px;
+  padding-top: 25px;
+  border-top-width: 1px;
+  border-color: ${props => props.theme.lightGreyColor};
+  border-style: solid;
 `;
 
 export default ({ navigation }) => {
@@ -60,6 +69,26 @@ export default ({ navigation }) => {
       setLoading(false);
     }
   };
+  const fbLogin = async () => {
+    try {
+      const { type, token } = await Facebook.logInWithReadPermissionsAsync(
+        "2437846576444335",
+        {
+          permissions: ["public_profile"]
+        }
+      );
+      if (type === "success") {
+        const response = await fetch(
+          `https://graph.facebook.com/me?access_token=${token}`
+        );
+        Alert.alert("Logged in!", `Hi ${(await response.json()).name}!`);
+      } else {
+        // type === 'cancel'
+      }
+    } catch ({ message }) {
+      alert(`Facebook Login Error: ${message}`);
+    }
+  };
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View>
@@ -87,6 +116,14 @@ export default ({ navigation }) => {
           autoCorrect={false}
         />
         <AuthButton loading={loading} onPress={handleSingup} text="Sign up" />
+        <FBContainer>
+          <AuthButton
+            bgColor={"#2D4DA7"}
+            loading={false}
+            onPress={fbLogin}
+            text="Connect Facebook"
+          />
+        </FBContainer>
       </View>
     </TouchableWithoutFeedback>
   );
