@@ -11,7 +11,7 @@ const TextInput = styled.TextInput`
   width: ${constants.width / 2};
   padding: 10px;
   background-color: ${props => props.theme.greyColor};
-  border: 1px solid ${props => props.theme.darkGreyColor};
+  border: 0.5px solid ${props => props.theme.darkGreyColor};
   border-radius: 4px;
 `;
 
@@ -20,14 +20,20 @@ const AuthInput = ({
   value,
   keyboardType = "default",
   autoCapitalize = "none",
-  onChange
+  returnKeyType = "done",
+  onChange,
+  onEndEditing = () => null,
+  autoCorrect = true
 }) => (
   <Container>
     <TextInput
       onChangeText={onChange}
       keyboardType={keyboardType}
+      returnKeyType={returnKeyType}
       placeholder={placeholder}
       autoCapitalize={autoCapitalize}
+      onEndEditing={onEndEditing}
+      autoCorrect={autoCorrect}
       value={value}
     />
   </Container>
@@ -45,7 +51,10 @@ AuthInput.propTypes = {
     "phone-pad"
   ]),
   autoCapitalize: PropTypes.oneOf(["none", "sentences", "words", "characters"]),
-  onChange: PropTypes.func.isRequired
+  onChange: PropTypes.func.isRequired,
+  returnKeyType: PropTypes.oneOf(["done", "go", "next", "search", "send"]),
+  onEndEditing: PropTypes.func,
+  autoCorrect: PropTypes.bool
 };
 
 export default AuthInput;
