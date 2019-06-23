@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { TouchableWithoutFeedback, Keyboard } from "react-native";
 import { Alert } from "react-native";
 import { useMutation } from "react-apollo-hooks";
-import { Facebook } from "expo";
+import * as Facebook from "expo-facebook";
 import AuthButton from "../../components/AuthButton";
 import AuthInput from "../../components/AuthInput";
 import useInput from "../../hooks/useInput";
@@ -71,17 +71,24 @@ export default ({ navigation }) => {
   };
   const fbLogin = async () => {
     try {
+      setLoading(true);
       const { type, token } = await Facebook.logInWithReadPermissionsAsync(
         "2437846576444335",
         {
-          permissions: ["public_profile"]
+          permissions: ["public_profile", "email"]
         }
       );
       if (type === "success") {
         const response = await fetch(
-          `https://graph.facebook.com/me?access_token=${token}`
+          `https://graph.facebook.com/me?access_token=${token}&fields=id,last_name,first_name,email`
         );
-        Alert.alert("Logged in!", `Hi ${(await response.json()).name}!`);
+        const { email, first_name, last_name } = await response.json();
+        emailInput.setValue(email);
+        fNameInput.setValue(first_name);
+        lNameInput.setValue(last_name);
+        const [username] = email.split("@");
+        usernameInput.setValue(username);
+        setLoading(false);
       } else {
         // type === 'cancel'
       }
