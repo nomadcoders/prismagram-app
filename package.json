@@ -23,6 +23,7 @@
     "react-apollo-hooks": "^0.4.5",
     "react-dom": "^16.8.6",
     "react-native": "https://github.com/expo/react-native/archive/sdk-33.0.0.tar.gz",
+    "react-native-swiper": "^1.5.14",
     "react-native-web": "^0.11.4",
     "react-navigation": "^3.11.0",
     "styled-components": "^4.3.2"
