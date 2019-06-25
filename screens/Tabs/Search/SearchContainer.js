@@ -1,14 +1,6 @@
 import React from "react";
-import styled from "styled-components";
-import SearchBar from "../../components/SearchBar";
-
-const View = styled.View`
-  justify-content: center;
-  align-items: center;
-  flex: 1;
-`;
-
-const Text = styled.Text``;
+import SearchBar from "../../../components/SearchBar";
+import SearchPresenter from "./SearchPresenter";
 
 export default class extends React.Component {
   static navigationOptions = ({ navigation }) => ({
@@ -24,7 +16,8 @@ export default class extends React.Component {
     super(props);
     const { navigation } = props;
     this.state = {
-      term: ""
+      term: "",
+      shouldFetch: false
     };
     navigation.setParams({
       term: this.state.term,
@@ -34,19 +27,16 @@ export default class extends React.Component {
   }
   onChange = text => {
     const { navigation } = this.props;
-    this.setState({ term: text });
+    this.setState({ term: text, shouldFetch: false });
     navigation.setParams({
       term: text
     });
   };
   onSubmit = () => {
-    console.log("Submit");
+    this.setState({ shouldFetch: true });
   };
   render() {
-    return (
-      <View>
-        <Text>Search</Text>
-      </View>
-    );
+    const { term, shouldFetch } = this.state;
+    return <SearchPresenter term={term} shouldFetch={shouldFetch} />;
   }
 }
