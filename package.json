@@ -17,6 +17,8 @@
     "expo-asset": "^5.0.1",
     "expo-facebook": "~5.0.1",
     "expo-font": "~5.0.1",
+    "expo-media-library": "~5.0.1",
+    "expo-permissions": "~5.0.1",
     "graphql": "^14.3.1",
     "prop-types": "^15.7.2",
     "react": "16.8.3",
